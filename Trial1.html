@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time GPS Tracker</title>
+
+    <!-- 1. Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        #map { height: 500px; width: 100%; border-radius: 8px; }
+        body { font-family: Arial, sans-serif; padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Device Live Location</h1>
+    <div id="map"></div>
+
+    <!-- 2. Include Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // 3. Initialize the Map
+        // [0, 0] is the starting center, 2 is the zoom level
+        var map = L.map('map').setView([0, 0], 15);
+
+        // 4. Add OpenStreetMap Tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // 5. Create a marker (start at 0,0)
+        var marker = L.marker([12.98, 80.25]).addTo(map)
+            .bindPopup('Bus Location')
+            .openPopup();
+
+        // 6. Function to fetch data and update map
+        async function updateGPSData() {
+            try {
+                // Replace 'YOUR_API_ENDPOINT' with your actual data source URL
+                const response = await fetch('YOUR_API_ENDPOINT'); 
+                const data = await response.json();
+
+                // Assuming your data looks like: { "lat": 12.97, "lng": 77.59 }
+                const newLat = data.lat;
+                const newLng = data.lng;
+
+                // Update marker position
+                marker.setLatLng([newLat, newLng]);
+                
+                // Optional: Center map on the new position
+                map.setView([newLat, newLng], 15); 
+                
+                console.log(`Updated to: ${newLat}, ${newLng}`);
+            } catch (error) {
+                console.error("Error fetching GPS data:", error);
+            }
+        }
+
+        // 7. Update every 5 seconds
+        setInterval(updateGPSData, 5000);
+    </script>
+</body>
+</html>

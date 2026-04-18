@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON Data Viewer</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Stored User Data</h2>
+    <div id="output">
+        <!-- The table will be injected here -->
+    </div>
+</div>
+
+<!-- 1. The JSON data is stored directly here -->
+<script id="user-data" type="application/json">
+[
+    { "id": 1, "name": "ELAN", "email": "john@example.com", "role": "Admin" },
+    { "id": 2, "name": "Jane Smith", "email": "jane@example.com", "role": "User" },
+    { "id": 3, "name": "Mike Ross", "email": "mike@example.com", "role": "Editor" }
+]
+</script>
+
+<script>
+    // 2. Access the hidden JSON script tag
+    const jsonText = document.getElementById('user-data').textContent;
+    
+    // 3. Convert that text into a JavaScript object
+    const users = JSON.parse(jsonText);
+
+    // 4. Function to "print" the data into a table
+    function displayData(data) {
+        let table = `<table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+        data.forEach(user => {
+            table += `<tr>
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.role}</td>
+                      </tr>`;
+        });
+
+        table += `</tbody></table>`;
+        document.getElementById('output').innerHTML = table;
+    }
+
+    // Run the function
+    displayData(users);
+</script>
+
+</body>
+</html>
